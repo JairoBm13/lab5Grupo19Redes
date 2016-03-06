@@ -77,7 +77,7 @@ public class ServidorUbicacion {
 				DatagramSocket servidorSocket = null;
 				try{
 					servidorSocket = new DatagramSocket(PUERTO);
-					System.out.println("Listo para recibir conexiones TCP");
+					System.out.println("Listo para recibir conexiones UDP");
 					while(true){
 						byte[] buf = new byte[256];
 						DatagramPacket cliente = new DatagramPacket(buf, buf.length);
