@@ -41,7 +41,6 @@ public class ServidorUbicacion {
 	 */
 	public void iniciarCom() {
 		final ExecutorService pool = Executors.newFixedThreadPool(N_THREADS);
-
 		Runnable serverRunTCP = new Runnable(){
 
 			@Override
@@ -54,6 +53,7 @@ public class ServidorUbicacion {
 						Socket cliente = servidorSocket.accept();
 
 						cliente.setSoTimeout(TIME_OUT);
+					
 						pool.execute(new ComunicacionTCP(cliente));
 					}
 				}catch(Exception e){
