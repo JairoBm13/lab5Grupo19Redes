@@ -8,9 +8,8 @@
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
     </uses-permission>
-
 
     <application
         android:allowBackup="true"
@@ -33,6 +32,11 @@
         <activity
             android:name=".ConexionUDP"
             android:label="@string/title_activity_conexion_udp"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".LocationTest"
+            android:label="@string/title_activity_location_test"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

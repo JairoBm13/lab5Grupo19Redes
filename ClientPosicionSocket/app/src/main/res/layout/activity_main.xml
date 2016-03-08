@@ -28,6 +28,34 @@
             android:id="@+id/udpBut"
             android:layout_gravity="center_horizontal" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:onClick="test"
+            android:id="@+id/butTest"
+            android:layout_gravity="right" />
+
+        <RadioGroup
+            android:id="@+id/radioProveedor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usar GPS"
+                android:id="@+id/radGPS"
+                android:checked="true" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Usar red"
+                android:id="@+id/radRed"
+                android:checked="false" />
+        </RadioGroup>
+
     </LinearLayout>
 
 </LinearLayout>

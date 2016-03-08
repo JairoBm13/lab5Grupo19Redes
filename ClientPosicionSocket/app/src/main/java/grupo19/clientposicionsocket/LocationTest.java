@@ -1,36 +1,31 @@
 package grupo19.clientposicionsocket;
 
 import android.content.Context;
-
-
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.location.LocationListener;
+import android.view.View;
+import android.widget.TextView;
 
-import java.net.DatagramSocket;
-
-
-public class ConexionUDP extends AppCompatActivity implements LocationListener{
-
-    private DatagramSocket socket;
-    private final static String SERVIDOR_IP = "192.168.10.38";
-    private final static int SERVIDOR_PUERTO = 8080;
-    private LocationManager locationMan;
+public class LocationTest extends AppCompatActivity implements LocationListener {
 
     private double longitud;
     private double latitud;
     private double velocidad;
     private double altitud;
 
+    private LocationManager locationMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conexion_udp);
+        setContentView(R.layout.activity_location_test);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -42,19 +37,36 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
         try {
             if (prov.equals(MainActivity.PROV_GPS)) locationMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             else if (prov.equals(MainActivity.PROV_RED))locationMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-
         }catch(SecurityException e){
-            
+
         }
 
-        try{
-            socket = new DatagramSocket();
-            while(true){
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateLocation();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
             }
-        }catch(Exception e){
+        };
+
+        t.start();
 
     }
 
+    public void updateLocation(){
+        TextView textView = (TextView) findViewById(R.id.textView2);
+        textView.setText(longitud + ";" + latitud + ";" + altitud + ";" + velocidad);
     }
 
     @Override
@@ -79,5 +91,4 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
     public void onProviderDisabled(String provider) {
 
     }
-
 }

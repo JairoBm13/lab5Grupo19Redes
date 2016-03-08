@@ -3,4 +3,5 @@
     <string name = "hint"> Stuff</string>
     <string name="title_activity_conexion_tcp">ConexionTCP</string>
     <string name="title_activity_conexion_udp">ConexionUDP</string>
+    <string name="title_activity_location_test">LocationTest</string>
 </resources>

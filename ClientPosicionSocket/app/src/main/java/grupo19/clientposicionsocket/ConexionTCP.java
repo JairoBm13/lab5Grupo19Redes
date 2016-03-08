@@ -25,6 +25,7 @@ public class ConexionTCP extends AppCompatActivity {
 
     LocationManager locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
