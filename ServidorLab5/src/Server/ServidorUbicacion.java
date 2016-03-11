@@ -25,6 +25,11 @@ public class ServidorUbicacion {
 	 * Puerto en el cual escucha el servidor.
 	 */
 	public static final int PUERTO = 8080;
+	
+	/**
+	 * Id de los clientes
+	 */
+	public int id;
 
 	/**
 	 * Metodo main del servidor con seguridad que inicializa un 
@@ -40,6 +45,7 @@ public class ServidorUbicacion {
 	 * Metodo que atiende a los usuarios.
 	 */
 	public void iniciarCom() {
+		id = 0;
 		final ExecutorService pool = Executors.newFixedThreadPool(N_THREADS);
 		Runnable serverRunTCP = new Runnable(){
 
@@ -82,8 +88,10 @@ public class ServidorUbicacion {
 						byte[] buf = new byte[256];
 						DatagramPacket cliente = new DatagramPacket(buf, buf.length);
 						servidorSocket.receive(cliente);
-						
-						pool.execute(new ComunicacionUDP(cliente));
+						id++;
+						DatagramSocket serv = servidorSocket;
+						servidorSocket = new DatagramSocket(PUERTO);
+						pool.execute(new ComunicacionUDP(serv, cliente, id));
 					}
 					
 				}catch(Exception e){
