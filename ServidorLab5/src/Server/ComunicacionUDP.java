@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import javax.xml.ws.handler.MessageContext.Scope;
+
 public class ComunicacionUDP extends Thread{
 	
 	//-------------------------------------------------------
@@ -31,16 +33,17 @@ public class ComunicacionUDP extends Thread{
 	
 	private final DatagramPacket sockCliente;
 	
-	private DatagramSocket conexion;
-	
 	private int id;
+	
+	private PrintWriter pw;
 	
 	//-------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------
-	public ComunicacionUDP(DatagramSocket sock, DatagramPacket pack, int nId){
+	public ComunicacionUDP(DatagramSocket sock, DatagramPacket pack, int nId, PrintWriter nPw){
 		sockCliente = pack;
 		id = nId;
+		pw = nPw;
 	}
 	
 	//-------------------------------------------------------
@@ -49,21 +52,9 @@ public class ComunicacionUDP extends Thread{
 	public void run(){
 		byte[] buffer = sockCliente.getData();
 		String mensaje = new String(buffer, 0, buffer.length);
-		System.out.println(mensaje);
 		String[] datos = mensaje.split(":::");
-		PrintWriter pW;
-		try {
-			File archi = new File(ARCHIVOS);
-			if (!archi.exists()) {
-				archi.createNewFile();
-			}
-			pW = new PrintWriter(new FileWriter(ARCHIVOS, true));
-			pW.println(datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]);
-			pW.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		System.out.println("Conexión "+id+" por UDP de "+sockCliente.getAddress().getHostAddress()+" - Longitud:"+datos[0]+ ", Latitud: "+datos[1]+", Velocidad: "+datos[2]+", Altitud: "+datos[3]);	
+		pw.println(id+","+sockCliente.getAddress().toString()+","+datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]);
+		pw.close();
 	}
 }

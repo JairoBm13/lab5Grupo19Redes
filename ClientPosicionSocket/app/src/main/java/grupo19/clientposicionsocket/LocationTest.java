@@ -20,6 +20,8 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
     private double velocidad;
     private double altitud;
 
+    private boolean detener;
+
     private LocationManager locationMan;
 
     @Override
@@ -28,7 +30,7 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
         setContentView(R.layout.activity_location_test);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        detener = false;
         Intent intent = getIntent();
         String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
 
@@ -46,7 +48,7 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
             @Override
             public void run() {
                 try {
-                    while (!isInterrupted()) {
+                    while (!detener) {
                         Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -90,5 +92,11 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public void detener(View view){
+        detener = true;
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

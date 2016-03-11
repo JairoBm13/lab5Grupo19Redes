@@ -23,10 +23,14 @@ public class ComunicacionTCP extends Thread{
 	
 	private InputStream in;
 	
-	private OutputStream out;
+	private int id;
 	
-	public ComunicacionTCP(Socket cl){
+	private OutputStream out;
+	private PrintWriter pwArchi;
+	public ComunicacionTCP(Socket cl, PrintWriter nPw, int id){
 		sockCliente = cl;
+		pwArchi = nPw;
+		this.id = id;
 	}
 	
 	/**
@@ -63,15 +67,17 @@ public class ComunicacionTCP extends Thread{
 				while(msjCliente.startsWith(C_UBICACION)){
 					
 					writePW(pw, S_ACK);
-					String [] ubicacion = msjCliente.split(":::");
+					String [] datos = msjCliente.split(":::");
 					
-					// TODO Guardar en archivo
+					
+					pwArchi.println(id+","+sockCliente.getInetAddress().getHostAddress()+","+datos[1]+ ","+datos[2]+","+datos[3]+","+datos[4]);
 					
 					msjCliente = readBR(br);
-					System.out.println(msjCliente);
+					System.out.println("Conexión "+id+" por TCP de "+sockCliente.getInetAddress().getHostAddress()+" - Longitud:"+datos[1]+ ", Latitud: "+datos[2]+", Velocidad: "+datos[3]+", Altitud: "+datos[4]);
 				}
 				
 				if (msjCliente.equals(C_TERMINAR)){
+					pwArchi.close();
 					writePW(pw, S_FIN);
 				}
 			}

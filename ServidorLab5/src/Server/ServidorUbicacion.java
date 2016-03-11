@@ -1,6 +1,9 @@
 package Server;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
@@ -26,11 +29,17 @@ public class ServidorUbicacion {
 	 */
 	public static final int PUERTO = 8080;
 	
+	private final static String UDP = "docs/udp.csv";
+	private final static String TCP = "docs/tcp.csv";
+	private PrintWriter pwTCP;
+	private PrintWriter pwUDP;
+	
 	/**
 	 * Id de los clientes
 	 */
-	public int id;
+	public int idUDP;
 
+	public int idTCP;
 	/**
 	 * Metodo main del servidor con seguridad que inicializa un 
 	 * pool de threads determinado por la constante nThreads.
@@ -45,8 +54,26 @@ public class ServidorUbicacion {
 	 * Metodo que atiende a los usuarios.
 	 */
 	public void iniciarCom() {
-		id = 0;
+		idUDP = 0;
+		idTCP = 0;
 		final ExecutorService pool = Executors.newFixedThreadPool(N_THREADS);
+		try {
+			File archi1 = new File(UDP);
+			File archi2 = new File(TCP);
+			if (!archi1.exists()) {
+				archi1.createNewFile();
+				pwTCP = new PrintWriter(new FileWriter(TCP, true));
+				pwTCP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud");
+			}
+			if(!archi2.exists()){
+				archi2.createNewFile();
+				pwUDP = new PrintWriter(new FileWriter(UDP, true));
+				pwUDP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud");
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		Runnable serverRunTCP = new Runnable(){
 
 			@Override
@@ -59,8 +86,9 @@ public class ServidorUbicacion {
 						Socket cliente = servidorSocket.accept();
 
 						cliente.setSoTimeout(TIME_OUT);
-					
-						pool.execute(new ComunicacionTCP(cliente));
+						pwTCP = new PrintWriter(new FileWriter(TCP, true));
+						idTCP++;
+						pool.execute(new ComunicacionTCP(cliente, pwTCP,idTCP));
 					}
 				}catch(Exception e){
 					System.err.println("Ocurrio un error");
@@ -88,8 +116,9 @@ public class ServidorUbicacion {
 						byte[] buf = new byte[256];
 						DatagramPacket cliente = new DatagramPacket(buf, buf.length);
 						servidorSocket.receive(cliente);
-						id++;
-						pool.execute(new ComunicacionUDP(servidorSocket, cliente, id));
+						idUDP++;
+						pwUDP = new PrintWriter(new FileWriter(UDP, true));
+						pool.execute(new ComunicacionUDP(servidorSocket, cliente, idUDP, pwUDP));
 					}
 					
 				}catch(Exception e){

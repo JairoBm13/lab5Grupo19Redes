@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.location.LocationListener;
+import android.view.View;
 import android.widget.TextView;
 
 import java.net.DatagramPacket;
@@ -33,6 +34,8 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
     private String ipServidor;
     private int puertoServidor;
 
+    private boolean detener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +48,7 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
         ipServidor = intent.getStringExtra("IP");
         String puerto = intent.getStringExtra("PORT");
         puertoServidor = Integer.parseInt(puerto);
-
+        detener = false;
         locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         try {
@@ -61,7 +64,7 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
             @Override
             public void run() {
                 try {
-                    while (!isInterrupted()) {
+                    while (!detener) {
 
                         Thread.sleep(1000);
                         DatagramSocket udpSocket = new DatagramSocket();
@@ -78,6 +81,7 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
                             }
                         });
                     }
+
                 } catch (InterruptedException e) {
                 }
                 catch(Exception e){
@@ -126,4 +130,9 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
     }
 
+    public void detener(View view){
+        detener = true;
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

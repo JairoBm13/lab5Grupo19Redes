@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -43,13 +44,15 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
     private String ipServidor;
     private int puertoServidor;
 
+    private boolean detener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conexion_tcp);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        detener = false;
         Intent intent = getIntent();
         String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
         ipServidor = intent.getStringExtra("IP");
@@ -82,7 +85,7 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
                         if(S_INICIO.equals(menServ)){
 
 
-                        while (!isInterrupted()) {
+                        while (!detener) {
                             Thread.sleep(1000);
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -146,5 +149,13 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public void detener(View view){
+        out.println(C_TERMINAR);
+        detener = true;
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
