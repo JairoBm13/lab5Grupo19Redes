@@ -68,6 +68,7 @@ public class ComunicacionTCP extends Thread{
 					// TODO Guardar en archivo
 					
 					msjCliente = readBR(br);
+					System.out.println(msjCliente);
 				}
 				
 				if (msjCliente.equals(C_TERMINAR)){

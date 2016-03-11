@@ -10,8 +10,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.location.LocationListener;
+import android.widget.TextView;
 
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 
 public class ConexionUDP extends AppCompatActivity implements LocationListener{
@@ -47,13 +51,50 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
             
         }
 
-        try{
-            socket = new DatagramSocket();
-            while(true){
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+
+                        Thread.sleep(1000);
+                        DatagramSocket udpSocket = new DatagramSocket();
+                        String locationData = latitud + ":::" + longitud + ":::" + velocidad + ":::" + altitud;
+                        byte[] loccationBytes = locationData.getBytes();
+                        InetAddress address = InetAddress.getByName(SERVIDOR_IP);
+                        DatagramPacket packet = new DatagramPacket(loccationBytes, locationData.length(),address, SERVIDOR_PUERTO);
+                        udpSocket.send(packet);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateUILocation();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+                catch(Exception e){
+
+                }
             }
-        }catch(Exception e){
+        };
+
+        t.start();
 
     }
+
+    public void updateUILocation(){
+        TextView txtLongitud = (TextView) findViewById(R.id.txtLongitud);
+        txtLongitud.setText(longitud + "");
+        TextView txtLatitud = (TextView) findViewById(R.id.txtLatitud);
+        txtLatitud.setText(latitud + "");
+        TextView txtAltitud = (TextView) findViewById(R.id.txtAltitud);
+        txtAltitud.setText(altitud + "");
+        TextView txtVelocidad = (TextView) findViewById(R.id.txtVelocidad);
+        txtVelocidad.setText(velocidad + "");
+
 
     }
 
