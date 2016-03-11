@@ -1,5 +1,6 @@
 package Server;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,14 +52,18 @@ public class ComunicacionUDP extends Thread{
 		System.out.println(mensaje);
 		String[] datos = mensaje.split(":::");
 		PrintWriter pW;
-//		try {
-//			pW = new PrintWriter(new FileWriter(ARCHIVOS, true));
-//			pW.println(datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]);
-//			pW.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			File archi = new File(ARCHIVOS);
+			if (!archi.exists()) {
+				archi.createNewFile();
+			}
+			pW = new PrintWriter(new FileWriter(ARCHIVOS, true));
+			pW.println(datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]);
+			pW.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 }
