@@ -51,7 +51,7 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                updateLocation();
+                                updateUILocation();
                             }
                         });
                     }
@@ -64,7 +64,7 @@ public class LocationTest extends AppCompatActivity implements LocationListener 
 
     }
 
-    public void updateLocation(){
+    public void updateUILocation(){
         TextView textView = (TextView) findViewById(R.id.textView2);
         textView.setText(longitud + ";" + latitud + ";" + altitud + ";" + velocidad);
     }
