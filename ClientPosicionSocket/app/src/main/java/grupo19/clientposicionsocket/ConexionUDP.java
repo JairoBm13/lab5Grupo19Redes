@@ -22,7 +22,7 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
     private DatagramSocket socket;
     private final static String SERVIDOR_IP = "192.168.0.13";
-    private final static int SERVIDOR_PUERTO = 8081;
+    private final static int SERVIDOR_PUERTO = 8080;
     private LocationManager locationMan;
 
     private double longitud;
@@ -30,6 +30,8 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
     private double velocidad;
     private double altitud;
 
+    private String ipServidor;
+    private int puertoServidor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
         Intent intent = getIntent();
         String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
+        ipServidor = intent.getStringExtra("IP");
+        String puerto = intent.getStringExtra("PORT");
+        puertoServidor = Integer.parseInt(puerto);
 
         locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -62,8 +67,8 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
                         DatagramSocket udpSocket = new DatagramSocket();
                         String locationData = latitud + ":::" + longitud + ":::" + velocidad + ":::" + altitud;
                         byte[] loccationBytes = locationData.getBytes();
-                        InetAddress address = InetAddress.getByName(SERVIDOR_IP);
-                        DatagramPacket packet = new DatagramPacket(loccationBytes, locationData.length(),address, SERVIDOR_PUERTO);
+                        InetAddress address = InetAddress.getByName(ipServidor);
+                        DatagramPacket packet = new DatagramPacket(loccationBytes, locationData.length(),address, puertoServidor);
                         udpSocket.send(packet);
 
                         runOnUiThread(new Runnable() {

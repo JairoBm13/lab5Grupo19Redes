@@ -24,8 +24,7 @@ public class ServidorUbicacion {
 	/**
 	 * Puerto en el cual escucha el servidor.
 	 */
-	public static final int PUERTO_TCP = 8080;
-	public static final int PUERTO_UDP = 8081;
+	public static final int PUERTO = 8080;
 	
 	/**
 	 * Id de los clientes
@@ -47,22 +46,21 @@ public class ServidorUbicacion {
 	 */
 	public void iniciarCom() {
 		id = 0;
-		final ExecutorService poolTCP = Executors.newFixedThreadPool(N_THREADS);
-		final ExecutorService poolUDP = Executors.newFixedThreadPool(N_THREADS);
+		final ExecutorService pool = Executors.newFixedThreadPool(N_THREADS);
 		Runnable serverRunTCP = new Runnable(){
 
 			@Override
 			public void run() {
 				ServerSocket servidorSocket = null;
 				try{
-					servidorSocket = new ServerSocket(PUERTO_TCP);
+					servidorSocket = new ServerSocket(PUERTO);
 					System.out.println("Listo para recibir conexiones TCP");
 					while(true){
 						Socket cliente = servidorSocket.accept();
 
 						cliente.setSoTimeout(TIME_OUT);
 					
-						poolTCP.execute(new ComunicacionTCP(cliente));
+						pool.execute(new ComunicacionTCP(cliente));
 					}
 				}catch(Exception e){
 					System.err.println("Ocurrio un error");
@@ -84,14 +82,14 @@ public class ServidorUbicacion {
 			public void run() {
 				DatagramSocket servidorSocket = null;
 				try{
-					servidorSocket = new DatagramSocket(PUERTO_UDP);
+					servidorSocket = new DatagramSocket(PUERTO);
 					System.out.println("Listo para recibir conexiones UDP");
 					while(true){
 						byte[] buf = new byte[256];
 						DatagramPacket cliente = new DatagramPacket(buf, buf.length);
 						servidorSocket.receive(cliente);
 						id++;
-						poolUDP.execute(new ComunicacionUDP(servidorSocket, cliente, id));
+						pool.execute(new ComunicacionUDP(servidorSocket, cliente, id));
 					}
 					
 				}catch(Exception e){

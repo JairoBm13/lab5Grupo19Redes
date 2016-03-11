@@ -6,12 +6,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -44,6 +40,9 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
     private double velocidad;
     private double altitud;
 
+    private String ipServidor;
+    private int puertoServidor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +52,9 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
         Intent intent = getIntent();
         String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
-
+        ipServidor = intent.getStringExtra("IP");
+        String puerto = intent.getStringExtra("PORT");
+        puertoServidor = Integer.parseInt(puerto);
         locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         try {
@@ -73,7 +74,7 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
                 @Override
                 public void run() {
                     try {
-                        socket = new Socket(IP,PUERTO);
+                        socket = new Socket(ipServidor,puertoServidor);
                         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         out = new PrintWriter(socket.getOutputStream(), true);
                         out.println(C_HOLA);
