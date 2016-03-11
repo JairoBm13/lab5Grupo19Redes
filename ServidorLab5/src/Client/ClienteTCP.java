@@ -45,7 +45,7 @@ public class ClienteTCP extends Thread{
 
 	public void run(){
 		try{
-			socket = new Socket("192.168.0.13", 8080);
+			socket = new Socket("192.168.56.1", 8080);
 			in = socket.getInputStream();
 			out = socket.getOutputStream();
 

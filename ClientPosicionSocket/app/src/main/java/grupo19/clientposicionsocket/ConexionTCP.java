@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import java.net.Socket;
 
 public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
-    private final static String IP = "192.168.10.38";
+    private final static String IP = "192.168.56.1";
     private final static int PUERTO = 8080;
 
     private final static String C_HOLA = "HOLA";
@@ -49,8 +50,10 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
         setContentView(R.layout.activity_conexion_tcp);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
+
         Intent intent = getIntent();
+        String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
+
         locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         try {
@@ -63,21 +66,25 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
         }
 
-        try {
-            socket = new Socket(IP,PUERTO);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new PrintWriter(socket.getOutputStream(), true);
+
+
             Thread t = new Thread() {
 
                 @Override
                 public void run() {
                     try {
+                        socket = new Socket(IP,PUERTO);
+                        Log.e("ERROR1","ERROR1");
+                        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        Log.e("ERROR2","ERROR2");
+                        out = new PrintWriter(socket.getOutputStream(), true);
+                        Log.e("ERROR3","ERROR3");
                         while (!isInterrupted()) {
                             Thread.sleep(1000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateLocation();
+                                    //updateLocation();
                                 }
                             });
 
@@ -97,16 +104,21 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
 
                         }
+                        in.close();
+                        out.close();
+                        socket.close();
                     } catch (InterruptedException e) {
+                        Log.e("Mensaje", "Mensaje");
                     } catch (IOException e){
+                        Log.e("Mensaje2", "Mensaje2");
+                    } catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
             };
 
             t.start();
-        } catch (Exception e) {
 
-        }
     }
 
     public void updateLocation(){
