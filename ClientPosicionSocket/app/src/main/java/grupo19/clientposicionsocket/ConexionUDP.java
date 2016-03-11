@@ -21,8 +21,8 @@ import java.net.SocketException;
 public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
     private DatagramSocket socket;
-    private final static String SERVIDOR_IP = "192.168.10.38";
-    private final static int SERVIDOR_PUERTO = 8080;
+    private final static String SERVIDOR_IP = "192.168.0.13";
+    private final static int SERVIDOR_PUERTO = 8081;
     private LocationManager locationMan;
 
     private double longitud;

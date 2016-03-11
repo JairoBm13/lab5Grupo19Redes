@@ -22,7 +22,7 @@ import java.net.Socket;
 
 public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
-    private final static String IP = "192.168.56.1";
+    private final static String IP = "192.168.0.13";
     private final static int PUERTO = 8080;
 
     private final static String C_HOLA = "HOLA";
@@ -74,43 +74,35 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
                 public void run() {
                     try {
                         socket = new Socket(IP,PUERTO);
-                        Log.e("ERROR1","ERROR1");
                         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        Log.e("ERROR2","ERROR2");
                         out = new PrintWriter(socket.getOutputStream(), true);
-                        Log.e("ERROR3","ERROR3");
+                        out.println(C_HOLA);
+                        String menServ = in.readLine();
+                        if(S_INICIO.equals(menServ)){
+
+
                         while (!isInterrupted()) {
                             Thread.sleep(1000);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    //updateLocation();
+                                    updateLocation();
                                 }
                             });
 
-                            out.println(C_HOLA);
-                            String menServ = in.readLine();
-                            if(S_INICIO.equals(menServ)){
+
                                 out.println(C_UBICACION+":::"+longitud + ":::" + latitud + ":::" + altitud + ":::" + velocidad);
                                 menServ = in.readLine();
-                                if(S_ACK.equals(menServ)){
-                                    out.println(C_TERMINAR);
-                                }
-                            }
-                            else{
 
                             }
-
-
-
                         }
                         in.close();
                         out.close();
                         socket.close();
                     } catch (InterruptedException e) {
-                        Log.e("Mensaje", "Mensaje");
+                        e.printStackTrace();
                     } catch (IOException e){
-                        Log.e("Mensaje2", "Mensaje2");
+                        e.printStackTrace();
                     } catch(Exception e){
                         e.printStackTrace();
                     }
@@ -122,8 +114,14 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
     }
 
     public void updateLocation(){
-        TextView textView = (TextView) findViewById(R.id.textView2);
-        textView.setText(longitud + ";" + latitud + ";" + altitud + ";" + velocidad);
+        TextView txtLongitud = (TextView) findViewById(R.id.txtLongitud);
+        txtLongitud.setText(longitud + "");
+        TextView txtLatitud = (TextView) findViewById(R.id.txtLatitud);
+        txtLatitud.setText(latitud + "");
+        TextView txtAltitud = (TextView) findViewById(R.id.txtAltitud);
+        txtAltitud.setText(altitud + "");
+        TextView txtVelocidad = (TextView) findViewById(R.id.txtVelocidad);
+        txtVelocidad.setText(velocidad + "");
     }
 
     @Override
