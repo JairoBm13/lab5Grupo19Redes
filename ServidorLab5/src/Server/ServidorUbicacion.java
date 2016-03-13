@@ -18,7 +18,7 @@ public class ServidorUbicacion {
 	 * por la respuesta de un cliente en cada una de las partes de la comunicación
 	 */
 	private static final int TIME_OUT = 10000;
-	
+
 	/**
 	 * Constante que especifica el numero de threads que se usan en el pool de conexiones.
 	 */
@@ -28,12 +28,14 @@ public class ServidorUbicacion {
 	 * Puerto en el cual escucha el servidor.
 	 */
 	public static final int PUERTO = 8080;
-	
-	private final static String UDP = "docs/udp.csv";
-	private final static String TCP = "docs/tcp.csv";
+
+	private final static String UDP = "docs/udp10it1.csv";
+	private final static String TCP = "docs/tcp10it2.csv";
+
+
 	private PrintWriter pwTCP;
 	private PrintWriter pwUDP;
-	
+
 	/**
 	 * Id de los clientes
 	 */
@@ -63,13 +65,17 @@ public class ServidorUbicacion {
 			if (!archi1.exists()) {
 				archi1.createNewFile();
 				pwTCP = new PrintWriter(new FileWriter(TCP, true));
-				pwTCP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud");
+				pwTCP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud,TiempoAtencion(nanosegundos)");
+				pwTCP.close();
 			}
+
 			if(!archi2.exists()){
 				archi2.createNewFile();
 				pwUDP = new PrintWriter(new FileWriter(UDP, true));
-				pwUDP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud");
+				pwUDP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud,TiempoAtencion(nanosegundos)");
+				pwUDP.close();
 			}
+
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -120,7 +126,7 @@ public class ServidorUbicacion {
 						pwUDP = new PrintWriter(new FileWriter(UDP, true));
 						pool.execute(new ComunicacionUDP(servidorSocket, cliente, idUDP, pwUDP));
 					}
-					
+
 				}catch(Exception e){
 					System.err.println("Ocurrio un error");
 					e.printStackTrace();

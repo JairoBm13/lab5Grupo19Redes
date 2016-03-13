@@ -22,7 +22,7 @@ public class ClienteTCP extends Thread{
 	private InputStream in;
 	private OutputStream out;
 
-
+	
 	public ClienteTCP(){
 	}
 
@@ -32,6 +32,7 @@ public class ClienteTCP extends Thread{
 	public String readBR(BufferedReader br) throws Exception{
 		String msj = br.readLine();
 		System.out.println("CLI: " + msj);
+
 		return msj;
 	}
 
@@ -41,6 +42,7 @@ public class ClienteTCP extends Thread{
 	public void writePW(PrintWriter pw, String msj) throws Exception{
 		pw.println(msj);
 		System.out.println("SVR: " + msj);
+
 	}
 
 	public void run(){
@@ -62,7 +64,7 @@ public class ClienteTCP extends Thread{
 				for (int i = 0; i<20 && alive; i++){
 					
 					sleep(1000);
-					writePW(pw,C_UBICACION+":::12312:::32131:::321313");
+					writePW(pw,C_UBICACION+":::12312:::32131:::321313:::432435");
 					sMsj = readBR(br);
 					
 					if (!sMsj.equals(S_ACK)) alive = false;

@@ -8,31 +8,28 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ComunicacionTCP extends Thread{
-	
+
 	// Constantes de protocolo
 	private final static String C_HOLA = "HOLA";
 	private final static String S_INICIO = "INICIO";
 	private final static String C_UBICACION = "UBICACION";
 	private final static String S_ACK = "OK";
-	private final static String C_TERMINAR = "TERMINAR";
-	private final static String S_FIN = "FIN";
+	//	private final static String C_TERMINAR = "TERMINAR";
+	//	private final static String S_FIN = "FIN";
 	private final static String S_ERROR = "ERROR";
 	//------------------------------------------------------------------------------
-	
+
 	private final Socket sockCliente;
-	
+
 	private InputStream in;
-	
-	private int id;
-	
+
 	private OutputStream out;
 	private PrintWriter pwArchi;
 	public ComunicacionTCP(Socket cl, PrintWriter nPw, int id){
 		sockCliente = cl;
 		pwArchi = nPw;
-		this.id = id;
 	}
-	
+
 	/**
 	 * Metodo auxiliar para leer mensaje por el socket e imprimir en consola los mensajes de comunicacion
 	 */
@@ -41,7 +38,7 @@ public class ComunicacionTCP extends Thread{
 		System.out.println("CLI: " + msj);
 		return msj;
 	}
-	
+
 	/**
 	 * Metodo auxiliar para enviar mensaje por el socket e imprimir en consola los mensajes de comunicacion
 	 */
@@ -49,56 +46,49 @@ public class ComunicacionTCP extends Thread{
 		pw.println(msj);
 		System.out.println("SVR: " + msj);
 	}
-	
-	
+
+
 	public void run(){
 		try{
 			in = sockCliente.getInputStream();
 			out = sockCliente.getOutputStream();
-			
+
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			PrintWriter pw = new PrintWriter(out, true);
-			
+
 			String msjCliente = readBR(br);
 			if (msjCliente.equals(C_HOLA)){
 				writePW(pw, S_INICIO);
-				
+
 				msjCliente = readBR(br);
-				while(msjCliente.startsWith(C_UBICACION)){
-					
+				if(msjCliente.startsWith(C_UBICACION)){
 					writePW(pw, S_ACK);
 					String [] datos = msjCliente.split(":::");
-					
-					
-					pwArchi.println(id+","+sockCliente.getInetAddress().getHostAddress()+","+datos[1]+ ","+datos[2]+","+datos[3]+","+datos[4]);
-					
-					msjCliente = readBR(br);
-					System.out.println("Conexión "+id+" por TCP de "+sockCliente.getInetAddress().getHostAddress()+" - Longitud:"+datos[1]+ ", Latitud: "+datos[2]+", Velocidad: "+datos[3]+", Altitud: "+datos[4]);
+					//long nanosec = System.nanoTime();
+					//pwArchi.println(datos[6]+","+sockCliente.getInetAddress().getHostAddress()+","+datos[1]+ ","+datos[2]+","+datos[3]+","+datos[4]+","+((nanosec - Long.parseLong(datos[5]))));
+					//System.out.println("Conexión "+datos[6]+" por TCP de "+sockCliente.getInetAddress().getHostAddress()+" - Longitud:"+datos[1]+ ", Latitud: "+datos[2]+", Velocidad: "+datos[3]+", Altitud: "+datos[4]);
 				}
-				
-				if (msjCliente.equals(C_TERMINAR)){
-					pwArchi.close();
-					writePW(pw, S_FIN);
-				}
+
 			}
 			else{
 				writePW(pw, S_ERROR);
 			}
-			
+
 		}catch(Exception e){
 			e.printStackTrace();
-			
+
 		}finally{
 			try{
 				out.close();
 				in.close();
 				sockCliente.close();
+				pwArchi.close();
 			}
 			catch(Exception e){
 				e.printStackTrace();
 			}
 		}
-		
-		
+
+
 	}
 }

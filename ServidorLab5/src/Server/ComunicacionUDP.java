@@ -12,28 +12,10 @@ import javax.xml.ws.handler.MessageContext.Scope;
 public class ComunicacionUDP extends Thread{
 	
 	//-------------------------------------------------------
-	// Constantes protocolo
-	//-------------------------------------------------------
-	
-	/**
-	 * 
-	 */
-	private final static String C_HOLA = "HOLA";
-	private final static String S_INICIO = "INICIO";
-	private final static String C_UBICACION = "UBICACION";
-	private final static String S_ACK = "OK";
-	private final static String C_TERMINAR = "TERMINAR";
-	private final static String S_FIN = "FIN";
-	private final static String S_ERROR = "ERROR";
-
-	private final static String ARCHIVOS = "docs/udp.csv";
-	//-------------------------------------------------------
 	// Atributos de trabajo
 	//-------------------------------------------------------
 	
 	private final DatagramPacket sockCliente;
-	
-	private int id;
 	
 	private PrintWriter pw;
 	
@@ -42,7 +24,6 @@ public class ComunicacionUDP extends Thread{
 	//-------------------------------------------------------
 	public ComunicacionUDP(DatagramSocket sock, DatagramPacket pack, int nId, PrintWriter nPw){
 		sockCliente = pack;
-		id = nId;
 		pw = nPw;
 	}
 	
@@ -53,8 +34,9 @@ public class ComunicacionUDP extends Thread{
 		byte[] buffer = sockCliente.getData();
 		String mensaje = new String(buffer, 0, buffer.length);
 		String[] datos = mensaje.split(":::");
-		System.out.println("Conexión "+id+" por UDP de "+sockCliente.getAddress().getHostAddress()+" - Longitud:"+datos[0]+ ", Latitud: "+datos[1]+", Velocidad: "+datos[2]+", Altitud: "+datos[3]);	
-		pw.println(id+","+sockCliente.getAddress().toString()+","+datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]);
+		long nanosec = System.nanoTime();
+		pw.println(datos[5]+","+sockCliente.getAddress().toString()+","+datos[0]+ ","+datos[1]+","+datos[2]+","+datos[3]+","+((nanosec - Long.parseLong(datos[4]))));
+		System.out.println("Conexión "+datos[5]+" por UDP de "+sockCliente.getAddress().getHostAddress()+" - Longitud:"+datos[0]+ ", Latitud: "+datos[1]+", Velocidad: "+datos[2]+", Altitud: "+datos[3]);
 		pw.close();
 	}
 }
