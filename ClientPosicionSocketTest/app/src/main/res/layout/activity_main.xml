@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/tcpBut"
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:onClick="tcpConexion"
+            android:text="Conexion TCP"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+        </Button>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:onClick="udpConexion"
+            android:text="Conexion UDP"
+            android:id="@+id/udpBut"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/tcpBut"
+            android:layout_alignLeft="@+id/tcpBut"
+            android:layout_alignStart="@+id/tcpBut" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usar GPS"
+            android:id="@+id/radGPS"
+            android:checked="true"
+            android:layout_below="@+id/udpBut"
+            android:layout_alignRight="@+id/hilos"
+            android:layout_alignEnd="@+id/hilos" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usar red"
+            android:id="@+id/radRed"
+            android:checked="false"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/udpBut"
+            android:layout_toRightOf="@+id/hilos"
+            android:layout_toEndOf="@+id/hilos" />
+
+        <TextView
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="IP"
+            android:id="@+id/IP"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/puertoText"
+            android:layout_alignRight="@+id/radioProveedor"
+            android:layout_alignEnd="@+id/radioProveedor" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Puerto"
+            android:id="@+id/puerto"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/radGPS"
+            android:layout_alignLeft="@+id/udpBut"
+            android:layout_alignStart="@+id/udpBut" />
+
+        <RadioGroup
+            android:id="@+id/radioProveedor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/puerto"
+            android:layout_toRightOf="@+id/puerto"
+            android:layout_toEndOf="@+id/puerto">
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Número hilos"
+            android:id="@+id/hilos"
+            android:layout_below="@+id/IPText"
+            android:layout_alignLeft="@+id/IP"
+            android:layout_alignStart="@+id/IP" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/puertoText"
+            android:layout_below="@+id/puerto"
+            android:layout_centerHorizontal="true"
+            android:text="8080" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/IPText"
+            android:text="157.253.207.246"
+            android:layout_below="@+id/IP"
+            android:layout_alignLeft="@+id/puertoText"
+            android:layout_alignStart="@+id/puertoText" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/hilosText"
+            android:layout_below="@+id/hilos"
+            android:layout_alignLeft="@+id/IPText"
+            android:layout_alignStart="@+id/IPText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Ramp-Up"
+            android:id="@+id/rampup"
+            android:layout_below="@+id/hilosText"
+            android:layout_alignLeft="@+id/hilos"
+            android:layout_alignStart="@+id/hilos" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/rampText"
+            android:layout_below="@+id/rampup"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Ciclos"
+            android:id="@+id/ciclos"
+            android:layout_below="@+id/rampText"
+            android:layout_alignLeft="@+id/rampup"
+            android:layout_alignStart="@+id/rampup" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/ciclosText"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center">
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
