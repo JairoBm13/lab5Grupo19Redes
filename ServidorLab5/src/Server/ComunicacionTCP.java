@@ -14,8 +14,8 @@ public class ComunicacionTCP extends Thread{
 	private final static String S_INICIO = "INICIO";
 	private final static String C_UBICACION = "UBICACION";
 	private final static String S_ACK = "OK";
-	//	private final static String C_TERMINAR = "TERMINAR";
-	//	private final static String S_FIN = "FIN";
+	private final static String C_TERMINAR = "TERMINAR";
+	private final static String S_FIN = "FIN";
 	private final static String S_ERROR = "ERROR";
 	//------------------------------------------------------------------------------
 
@@ -64,9 +64,8 @@ public class ComunicacionTCP extends Thread{
 				if(msjCliente.startsWith(C_UBICACION)){
 					writePW(pw, S_ACK);
 					String [] datos = msjCliente.split(":::");
-					//long nanosec = System.nanoTime();
-					//pwArchi.println(datos[6]+","+sockCliente.getInetAddress().getHostAddress()+","+datos[1]+ ","+datos[2]+","+datos[3]+","+datos[4]+","+((nanosec - Long.parseLong(datos[5]))));
-					//System.out.println("Conexión "+datos[6]+" por TCP de "+sockCliente.getInetAddress().getHostAddress()+" - Longitud:"+datos[1]+ ", Latitud: "+datos[2]+", Velocidad: "+datos[3]+", Altitud: "+datos[4]);
+					pwArchi.println(sockCliente.getInetAddress().getHostAddress()+","+datos[1]+ ","+datos[2]+","+datos[3]+","+datos[4]);
+					System.out.println("TCP de "+sockCliente.getInetAddress().getHostAddress()+" - Longitud:"+datos[1]+ ", Latitud: "+datos[2]+", Velocidad: "+datos[3]+", Altitud: "+datos[4]);
 				}
 
 			}

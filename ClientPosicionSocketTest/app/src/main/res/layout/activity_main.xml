@@ -30,27 +30,6 @@
             android:layout_alignLeft="@+id/tcpBut"
             android:layout_alignStart="@+id/tcpBut" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Usar GPS"
-            android:id="@+id/radGPS"
-            android:checked="true"
-            android:layout_below="@+id/udpBut"
-            android:layout_alignRight="@+id/hilos"
-            android:layout_alignEnd="@+id/hilos" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Usar red"
-            android:id="@+id/radRed"
-            android:checked="false"
-            android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/udpBut"
-            android:layout_toRightOf="@+id/hilos"
-            android:layout_toEndOf="@+id/hilos" />
-
         <TextView
             android:layout_width="66dp"
             android:layout_height="wrap_content"
@@ -58,9 +37,9 @@
             android:text="IP"
             android:id="@+id/IP"
             android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/puertoText"
-            android:layout_alignRight="@+id/radioProveedor"
-            android:layout_alignEnd="@+id/radioProveedor" />
+            android:layout_below="@+id/radioProveedor"
+            android:layout_alignLeft="@+id/ciclos"
+            android:layout_alignStart="@+id/ciclos" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,18 +48,30 @@
             android:text="Puerto"
             android:id="@+id/puerto"
             android:layout_gravity="center_horizontal"
-            android:layout_below="@+id/radGPS"
-            android:layout_alignLeft="@+id/udpBut"
-            android:layout_alignStart="@+id/udpBut" />
+            android:layout_below="@+id/IPText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <RadioGroup
             android:id="@+id/radioProveedor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/puerto"
-            android:layout_toRightOf="@+id/puerto"
-            android:layout_toEndOf="@+id/puerto">
+            android:layout_below="@+id/udpBut"
+            android:layout_centerHorizontal="true">
 
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usar GPS"
+                    android:id="@+id/radGPS"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usar red"
+                    android:id="@+id/radRed"
+                    android:checked="true" />
         </RadioGroup>
 
         <TextView
@@ -89,9 +80,9 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Número hilos"
             android:id="@+id/hilos"
-            android:layout_below="@+id/IPText"
-            android:layout_alignLeft="@+id/IP"
-            android:layout_alignStart="@+id/IP" />
+            android:layout_below="@+id/puertoText"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -99,9 +90,10 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/puertoText"
-            android:layout_below="@+id/puerto"
-            android:layout_centerHorizontal="true"
-            android:text="8080" />
+            android:text="8080"
+            android:layout_below="@+id/IPText"
+            android:layout_alignRight="@+id/udpBut"
+            android:layout_alignEnd="@+id/udpBut" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -109,10 +101,10 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/IPText"
-            android:text="157.253.207.246"
-            android:layout_below="@+id/IP"
-            android:layout_alignLeft="@+id/puertoText"
-            android:layout_alignStart="@+id/puertoText" />
+            android:text="192.168.0.13"
+            android:layout_below="@+id/radioProveedor"
+            android:layout_alignRight="@+id/udpBut"
+            android:layout_alignEnd="@+id/udpBut" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -120,9 +112,9 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/hilosText"
-            android:layout_below="@+id/hilos"
-            android:layout_alignLeft="@+id/IPText"
-            android:layout_alignStart="@+id/IPText" />
+            android:layout_alignTop="@+id/hilos"
+            android:layout_toRightOf="@+id/hilos"
+            android:layout_toEndOf="@+id/hilos" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -131,8 +123,8 @@
             android:text="Ramp-Up"
             android:id="@+id/rampup"
             android:layout_below="@+id/hilosText"
-            android:layout_alignLeft="@+id/hilos"
-            android:layout_alignStart="@+id/hilos" />
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -140,8 +132,9 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/rampText"
-            android:layout_below="@+id/rampup"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@+id/hilosText"
+            android:layout_alignLeft="@+id/hilosText"
+            android:layout_alignStart="@+id/hilosText" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -150,8 +143,8 @@
             android:text="Ciclos"
             android:id="@+id/ciclos"
             android:layout_below="@+id/rampText"
-            android:layout_alignLeft="@+id/rampup"
-            android:layout_alignStart="@+id/rampup" />
+            android:layout_alignRight="@+id/puerto"
+            android:layout_alignEnd="@+id/puerto" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -159,8 +152,9 @@
             android:inputType="number"
             android:ems="10"
             android:id="@+id/ciclosText"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_alignTop="@+id/ciclos"
+            android:layout_alignLeft="@+id/rampText"
+            android:layout_alignStart="@+id/rampText" />
 
     </RelativeLayout>
 

@@ -18,9 +18,6 @@ public class ClienteTCP extends AbstractJavaSamplerClient{
 	private final static String S_INICIO = "INICIO";
 	private final static String C_UBICACION = "UBICACION";
 	private final static String S_ACK = "OK";
-	//	private final static String C_TERMINAR = "TERMINAR";
-	//	private final static String S_FIN = "FIN";
-	//	private final static String S_ERROR = "ERROR";
 
 	private final static String IP_SERVER = "192.168.0.13";
 	private final static int PUERTO_SERVER = 8080;

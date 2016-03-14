@@ -76,39 +76,40 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
                 @Override
                 public void run() {
-                    try {
-                        socket = new Socket(ipServidor,puertoServidor);
-                        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        out = new PrintWriter(socket.getOutputStream(), true);
-                        out.println(C_HOLA);
-                        String menServ = in.readLine();
-                        if(S_INICIO.equals(menServ)){
+                    while (!detener) {
+                        try {
+                            socket = new Socket(ipServidor, puertoServidor);
+                            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                            out = new PrintWriter(socket.getOutputStream(), true);
+                            out.println(C_HOLA);
+                            String menServ = in.readLine();
+                            if (S_INICIO.equals(menServ)) {
 
 
-                        while (!detener) {
-                            Thread.sleep(1000);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateLocation();
-                                }
-                            });
+                                Thread.sleep(1000);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        updateLocation();
+                                    }
+                                });
 
 
-                                out.println(C_UBICACION+":::"+longitud + ":::" + latitud + ":::" + altitud + ":::" + velocidad);
+                                out.println(C_UBICACION + ":::" + longitud + ":::" + latitud + ":::" + altitud + ":::" + velocidad);
                                 menServ = in.readLine();
 
                             }
+
+                            in.close();
+                            out.close();
+                            socket.close();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        in.close();
-                        out.close();
-                        socket.close();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    } catch(Exception e){
-                        e.printStackTrace();
                     }
                 }
             };

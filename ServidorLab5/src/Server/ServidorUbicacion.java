@@ -29,8 +29,8 @@ public class ServidorUbicacion {
 	 */
 	public static final int PUERTO = 8080;
 
-	private final static String UDP = "docs/udp10it1.csv";
-	private final static String TCP = "docs/tcp10it2.csv";
+	private final static String UDP = "docs/udp.csv";
+	private final static String TCP = "docs/tcp.csv";
 
 
 	private PrintWriter pwTCP;
@@ -65,14 +65,14 @@ public class ServidorUbicacion {
 			if (!archi1.exists()) {
 				archi1.createNewFile();
 				pwTCP = new PrintWriter(new FileWriter(TCP, true));
-				pwTCP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud,TiempoAtencion(nanosegundos)");
+				pwTCP.println("IP cliente,Latitud,Longitud,Velocidad,Altitud");
 				pwTCP.close();
 			}
 
 			if(!archi2.exists()){
 				archi2.createNewFile();
 				pwUDP = new PrintWriter(new FileWriter(UDP, true));
-				pwUDP.println("Número Conexión,IP cliente,Latitud,Longitud,Velocidad,Altitud,TiempoAtencion(nanosegundos)");
+				pwUDP.println("IP cliente,Latitud,Longitud,Velocidad,Altitud");
 				pwUDP.close();
 			}
 

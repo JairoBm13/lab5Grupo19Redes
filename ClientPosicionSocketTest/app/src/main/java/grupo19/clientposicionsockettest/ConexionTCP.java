@@ -8,10 +8,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -44,6 +48,9 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
     private String ipServidor;
     private int puertoServidor;
 
+    private static int exitoso = 0;
+    private static int nPrueba = 0;
+
     private boolean detener;
 
     @Override
@@ -52,6 +59,7 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
         setContentView(R.layout.activity_conexion_tcp);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         detener = false;
         Intent intent = getIntent();
         String prov = intent.getStringExtra(MainActivity.PROVEEDOR);
@@ -59,6 +67,7 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
         String puerto = intent.getStringExtra("PORT");
         puertoServidor = Integer.parseInt(puerto);
         locationMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         int hilos = Integer.parseInt(intent.getStringExtra("HILOS"));
         int ramp = Integer.parseInt(intent.getStringExtra("RAMP"));
         int ciclos = Integer.parseInt(intent.getStringExtra("CICLOS"));
@@ -81,7 +90,11 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
                     @Override
                     public void run() {
+                        long nanosecI = 0;
+                        long nanosecF = 0;
+                        boolean fueExitoso = true;
                         try {
+                            nanosecI = System.nanoTime();
                             socket = new Socket(ipServidor, puertoServidor);
                             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                             out = new PrintWriter(socket.getOutputStream(), true);
@@ -90,31 +103,35 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
                             if (S_INICIO.equals(menServ)) {
 
 
-                                while (!detener) {
-                                    Thread.sleep(1000);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            updateLocation();
-                                        }
-                                    });
-
-
                                     out.println(C_UBICACION + ":::" + longitud + ":::" + latitud + ":::" + altitud + ":::" + velocidad);
                                     menServ = in.readLine();
+                                    if (menServ.startsWith(S_ACK)){
+                                        nanosecF = System.nanoTime();
+                                        exitoso++;
+                                    }
 
-                                }
+
                             }
                             in.close();
                             out.close();
                             socket.close();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
+                            nPrueba++;
+                            fueExitoso = false;
                             e.printStackTrace();
                         } catch (Exception e) {
+                            nPrueba++;
+                            fueExitoso = false;
                             e.printStackTrace();
                         }
+
+                        nPrueba++;
+                        Log.e("Damnit", "Fuck");
+                        if(fueExitoso)
+                            appendLog("1,"+((nanosecF-nanosecI)/1000000));
+                        else
+                            appendLog("0, ");
+
                     }
                 };
                 threads[i] = t;
@@ -125,14 +142,13 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
                 Thread t = threads[i];
                 t.start();
                 try {
-                    Thread.sleep(ramp * 1000);
+                    Thread.sleep((ramp/hilos) * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
         }
-
     }
 
     public void updateLocation(){
@@ -175,5 +191,35 @@ public class ConexionTCP extends AppCompatActivity implements LocationListener{
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void appendLog(String text)
+    {
+        File logFile = new File("sdcard/test/TCP80.csv");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

@@ -10,9 +10,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.location.LocationListener;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -32,6 +37,9 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
     private String ipServidor;
     private int puertoServidor;
+
+    private static int exitoso = 0;
+    private static int nPrueba = 0;
 
     private boolean detener;
 
@@ -68,10 +76,11 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
 
                     @Override
                     public void run() {
+                        long nanosecI = 0;
+                        long nanosecF = 0;
+                        boolean fueExitoso = true;
                         try {
-                            while (!detener) {
-
-                                Thread.sleep(1000);
+                                nanosecI = System.nanoTime();
                                 DatagramSocket udpSocket = new DatagramSocket();
                                 String locationData = latitud + ":::" + longitud + ":::" + velocidad + ":::" + altitud;
                                 byte[] loccationBytes = locationData.getBytes();
@@ -79,18 +88,34 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
                                 DatagramPacket packet = new DatagramPacket(loccationBytes, locationData.length(), address, puertoServidor);
                                 udpSocket.send(packet);
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        updateUILocation();
-                                    }
-                                });
-                            }
+                                byte[] buf = new byte[256];
+                                packet = new DatagramPacket(buf, buf.length);
+                                udpSocket.receive(packet);
+                                byte[] buffer = packet.getData();
+                                String mensaje = new String(buffer, 0, buffer.length);
+                                if (mensaje.startsWith("OK")){
+                                    nanosecF = System.nanoTime();
+                                    exitoso++;
+                                }
 
-                        } catch (InterruptedException e) {
-                        } catch (Exception e) {
+                                if(fueExitoso)
+                                    appendLog("1,"+((nanosecF-nanosecI)/1000000));
+                                else
+                                    appendLog("0, ");
 
+
+
+                        }  catch (Exception e) {
+                            nPrueba++;
+                            fueExitoso = false;
                         }
+
+                        nPrueba++;
+                        Log.e("Damnit","Fuck");
+                        if(fueExitoso)
+                            appendLog("1,"+((nanosecF-nanosecI)/1000000));
+                        else
+                            appendLog("0, ");
                     }
                 };
                 threads[i] = t;
@@ -100,7 +125,7 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
                 Thread t = threads[i];
                 t.start();
                 try {
-                    Thread.sleep(ramp * 1000);
+                    Thread.sleep((ramp/hilos) * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -148,5 +173,35 @@ public class ConexionUDP extends AppCompatActivity implements LocationListener{
         detener = true;
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void appendLog(String text)
+    {
+        File logFile = new File("sdcard/test/UDP80.csv");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
